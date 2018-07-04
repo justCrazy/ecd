@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ecd.dao.MapToDoDao">
+
+	<!-- 添加通知操作 -->
+	<insert id="insertMapToDo" parameterType="com.ecd.pojo.MapToDo">
+		INSERT INTO map2do (
+		map2Do_event_id,
+		map2Do_email,
+		map2Do_name,
+		map2Do_event_description,
+		map2Do_event_address,
+		map2Do_event_time
+		)
+		VALUES (
+		#{map2Do_event_id},
+		#{map2Do_email},
+		#{map2Do_name},
+		#{map2Do_event_description},
+		#{map2Do_event_address},
+		#{map2Do_event_time}
+		)
+	</insert>
+
+	<!-- 查询所有待办件操作,4为每页数目 实际传入值为页码*每页数目 -->
+	<select id="selectAllMapToDo" resultType="com.ecd.pojo.MapToDo">
+		select * from map2do
+		where map2Do_email = #{map2Do_email} limit #{page} ,5
+	</select>
+
+	<!-- 查看待办件数目操作 -->
+	<select id="selectNumOfMapToDo" resultType="java.lang.Integer">
+		select count(*) from
+		map2do where map2Do_email = #{map2Do_email}
+	</select>
+
+	<!-- 删除待办件数据库中的数据操作 -->
+	<delete id="deleteMapToDo" parameterType="java.lang.String">
+		DELETE FROM map2do
+		WHERE
+		map2Do_event_id = #{map2Do_event_id}
+	</delete>
+
+
+
+
+
+
+</mapper>

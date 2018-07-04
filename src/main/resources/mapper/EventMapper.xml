@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ecd.dao.EventDao">
+
+	<!-- 添加通知操作 -->
+	<insert id="insertEvent" parameterType="com.ecd.pojo.Event">
+		<selectKey keyProperty="event_id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		INSERT INTO event (
+		event_id,
+		event_description,
+		event_address,
+		event_time,
+		event_person,
+		event_logging_person,
+		event_logging_time,
+		event_grade
+		)
+		VALUES
+		(
+		#{event_id},
+		#{event_description},
+		#{event_address},
+		#{event_time},
+		#{event_person},
+		#{event_logging_person},
+		#{event_logging_time},
+		#{event_grade}
+		)
+	</insert>
+
+	<!-- 删除通知操作 -->
+	<delete id="deleteEventById" parameterType="java.lang.String">
+		DELETE FROM event
+		WHERE
+		event_id = #{event_id}
+	</delete>
+
+	<!-- 查询所有通知操作,5为每页数目 实际传入值为页码*每页数目 -->
+	<select id="selectAllEvent" parameterType="java.lang.Integer"
+		resultType="com.ecd.pojo.Event">
+		select * from event  ORDER BY event_logging_time limit #{page} ,5
+	</select>
+
+	<!-- 查看通知数目操作 -->
+	<select id="selectNumOfEvent" resultType="java.lang.Integer">
+		select count(*) from
+		event
+	</select>
+
+	<!-- 查询单个通知操作 -->
+	<select id="selectEventById" parameterType="java.lang.String"
+		resultType="com.ecd.pojo.Event">
+		SELECT * FROM event WHERE event_id =
+		#{event_id}
+	</select>
+
+
+	<!-- 事件信息更新操作 -->
+	<update id="updateEventById" parameterType="com.ecd.pojo.Event">
+		update event
+		<set>
+			<if test="event_summary != null">event_summary=#{event_summary},</if>
+			<if test="event_finish_time != null">event_finish_time=#{event_finish_time},</if>
+			<if test="event_finish_person != null">event_finish_person=#{event_finish_person}</if>
+		</set>
+		where event_id=#{event_id}
+	</update>
+
+
+
+
+
+</mapper>

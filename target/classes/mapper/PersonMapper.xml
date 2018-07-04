@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ecd.dao.PersonDao">
+	<!-- id:标识映射文件中的sql 将sql语句封装到mappedStatement对象中，所以id为statement的id -->
+	<!-- parameterType：指定输入参数的类型 -->
+	<!-- #{email}：其中的email表示接收输入的参数，参数名称就是email，如果输入参数为简单类型 #{}中的参数名可以任意 -->
+	<!-- resultType:指定sql输出结果的java对象类型，select指定 resultType表示将单条记录映射成的Java对象 -->
+
+	<!-- personList -->
+	<!-- <resultMap type="person" id="personResultMap"> <id property="email_" 
+		column="email" /> <result property="password_" column="password" /> <result 
+		property="name_" column="name" /> </resultMap> -->
+	<!-- 根据id查找用户 -->
+	<select id="selectPersonById" parameterType="java.lang.String"
+		resultType="com.ecd.pojo.Person">
+		SELECT * FROM person WHERE email =
+		#{email}
+	</select>
+
+	<!-- 更新密码操作 -->
+	<update id="updatePassword" parameterType="com.ecd.pojo.Person">
+		update person set
+		password = #{password}
+		WHERE email = #{email}
+	</update>
+
+	<!-- 人员信息更新操作 -->
+	<update id="updatePersonInfo" parameterType="com.ecd.pojo.Person">
+		update person
+		<set>
+			<if test="name != null">name=#{name},</if>
+			<if test="gender != null">gender=#{gender},</if>
+			<if test="phone != null">phone=#{phone}</if>
+		</set>
+		where email=#{email}
+	</update>
+
+	<!-- 删除用户操作 -->
+	<delete id="deletePerson" parameterType="java.lang.String">
+		DELETE FROM person WHERE
+		email = #{email}
+	</delete>
+
+	<!-- 查询所有执法人员信息操作,3为每页数目 -->
+	<select id="selectAllLeo" parameterType="java.lang.Integer"
+		resultType="com.ecd.pojo.Person">
+		select * from person where identity = 1 limit #{page} ,5
+	</select>
+	
+	<!-- 查询所有执法人员信息操作,3为每页数目 -->
+	<select id="selectAll" resultType="com.ecd.pojo.Person">
+		select * from person where identity = 1 
+	</select>
+
+	<!-- 查询详细执法人员信息 -->
+	<!-- 采用第一个xml配置 selectPersonById -->
+	<select id="selectLeoByEmail" parameterType="java.lang.String"
+		resultType="com.ecd.pojo.Person">
+		select * from person where email =#{email}
+	</select>
+
+	<!-- 根据查询所有执法人员数量 -->
+	<select id="selectNumOfLeo" resultType="java.lang.Integer">
+		select count(*) from
+		person
+	</select>
+
+	<!-- 注册操作 -->
+	<!-- <insert id="insertPerson" parameterType="com.ecd.pojo.PersonToRegist"> 
+		INSERT INTO regist_person (regist_person_email, regist_person_password, regist_person_name, 
+		regist_person_gender, regist_person_verify, regist_person_phone) VALUES (#{regist_person_email}, 
+		#{regist_person_password}, #{regist_person_name}, #{regist_person_gender}, 
+		#{regist_person_verify}, #{regist_person_phone} ) </insert> -->
+
+	<!-- 更改待注册用户信息（注册） -->
+	<update id="insertPerson" parameterType="com.ecd.pojo.PersonToRegist">
+		update regist_person set
+		regist_person_password = #{regist_person_password},
+		regist_person_name = #{regist_person_name},
+		regist_person_gender = #{regist_person_gender},
+		regist_person_verify = #{regist_person_verify},
+		regist_person_phone = #{regist_person_phone}
+		where regist_person_email=#{regist_person_email}
+	</update>
+
+	<!-- 查询所有执法人员信息操作,3为每页数目 -->
+	<select id="selectAllRegistPerson" parameterType="java.lang.Integer"
+		resultType="com.ecd.pojo.PersonToRegist">
+		select * from regist_person where regist_person_name is not null limit #{page} ,5
+	</select>
+
+	<!-- 根据查询所有执法人员数量 -->
+	<select id="selectNumOfRegistPerson" resultType="java.lang.Integer">
+		select count(*)
+		from
+		regist_person
+	</select>
+
+	<!-- 根据id查找申请注册用户 -->
+	<select id="selectRegistPersonById" parameterType="java.lang.String"
+		resultType="com.ecd.pojo.PersonToRegist">
+		SELECT * FROM regist_person WHERE regist_person_email =
+		#{regist_person_email}
+	</select>
+
+	<!-- 更改验证码 -->
+	<update id="updateVerify" parameterType="com.ecd.pojo.PersonToRegist">
+		update regist_person set
+		regist_person_verify = #{regist_person_verify}
+		where
+		regist_person_email=#{regist_person_email}
+	</update>
+
+	<!-- 插入验证码 -->
+	<update id="insertVerify" parameterType="com.ecd.pojo.PersonToRegist">
+		INSERT INTO
+		regist_person (
+		regist_person_email,
+		regist_person_verify)
+		VALUES
+		(#{regist_person_email},
+		#{regist_person_verify} )
+	</update>
+
+	<!-- 审批权限操作 -->
+	<insert id="insertLeo" parameterType="com.ecd.pojo.Person">
+		INSERT INTO person (email,
+		password,
+		name,
+		gender,
+		identity,
+		phone)
+		VALUES (#{email},
+		#{password},
+		#{name},
+		#{gender},
+		#{identity},
+		#{phone}
+		)
+	</insert>
+
+	<!-- 删除待注册用户操作 -->
+	<delete id="deleteRegistPerson" parameterType="java.lang.String">
+		DELETE FROM
+		regist_person WHERE
+		regist_person_email = #{regist_person_email}
+	</delete>
+</mapper>

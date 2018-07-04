@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ecd.dao.NoticeDao">
+
+	<!-- 添加通知操作 -->
+	<insert id="insertNotice" parameterType="com.ecd.pojo.Notice">
+		INSERT INTO notice (
+		title,
+		content,
+		notice_person,
+		time
+		)
+		VALUES (
+		#{title},
+		#{content},
+		#{notice_person},
+		#{time}
+		)
+	</insert>
+
+	<!-- 查询所有通知操作,5为每页数目 实际传入值为页码*每页数目 -->
+	<select id="selectAllNotice" parameterType="java.lang.Integer"
+		resultType="com.ecd.pojo.Notice">
+		select * from notice ORDER BY time desc limit #{page} ,5
+	</select>
+
+	<!-- 查看通知数目操作 -->
+	<select id="selectNumOfNotice" resultType="java.lang.Integer">
+		select count(*) from
+		notice
+	</select>
+
+	<!-- 查询单个通知操作 -->
+	<select id="selectNoticeById" parameterType="java.lang.Integer"
+		resultType="com.ecd.pojo.Notice">
+		SELECT * FROM notice WHERE notice_id =
+		#{notice_id}
+	</select>
+
+	<!-- 删除通知操作 -->
+	<delete id="deleteNotice" parameterType="java.lang.Integer">
+		DELETE FROM notice WHERE
+		notice_id = #{notice_id}
+	</delete>
+
+
+
+
+
+
+</mapper>
